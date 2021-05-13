@@ -1,7 +1,8 @@
-use self::Feature::{Akita, Car, Cat, Child, Goldfish, Perfume, Pomeranian, Samoyed, Tree, Vizsla};
-use crate::{parse::*, Date, Day, OkOrFail, Puzzle, Result};
 use failure::bail;
 use fnv::{FnvBuildHasher as BuildHasher, FnvHashMap as HashMap};
+
+use self::Feature::{Akita, Car, Cat, Child, Goldfish, Perfume, Pomeranian, Samoyed, Tree, Vizsla};
+use crate::{parse::*, Date, Day, OkOrFail, Puzzle, Result};
 
 const DATE: Date = Date::new(Day::D16, super::YEAR);
 pub(super) const PUZZLE: Puzzle = Puzzle::new(DATE, solve);
@@ -22,12 +23,11 @@ fn solve(input: String) -> Result {
     answer!(aunt1.id, aunt2.id);
 }
 
-fn find_aunt(
+fn find_aunt<'a>(
     sample_aunt: &Aunt,
     aunts: &'a [Aunt],
     p: impl Fn(Feature, u8, u8) -> bool,
-) -> Result<&'a Aunt>
-{
+) -> Result<&'a Aunt> {
     aunts
         .iter()
         .find(|&aunt| {
@@ -38,7 +38,8 @@ fn find_aunt(
                     false
                 }
             })
-        }).ok_or_fail("aunt not found")
+        })
+        .ok_or_fail("aunt not found")
 }
 
 type Features = HashMap<Feature, u8>;

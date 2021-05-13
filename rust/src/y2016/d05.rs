@@ -1,5 +1,6 @@
-use crate::{Date, Day, Puzzle, Result};
 use std::collections::BTreeMap;
+
+use crate::{Date, Day, Puzzle, Result};
 
 const DATE: Date = Date::new(Day::D05, super::YEAR);
 pub(super) const PUZZLE: Puzzle = Puzzle::new(DATE, solve);
@@ -30,7 +31,7 @@ fn solve(input: String) -> Result {
     answer!(password1, password2);
 }
 
-fn hex_digit(n: u8) -> char {
+const fn hex_digit(n: u8) -> char {
     if n < 10 {
         (n + b'0') as char
     } else {

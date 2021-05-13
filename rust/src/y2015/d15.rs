@@ -1,6 +1,8 @@
-use crate::{parse::*, Date, Day, OkOrFail, Puzzle, Result};
-use derive_more::Add;
 use std::{cmp::max, convert::TryFrom, ops::Mul};
+
+use derive_more::Add;
+
+use crate::{parse::*, Date, Day, OkOrFail, Puzzle, Result};
 
 const DATE: Date = Date::new(Day::D15, super::YEAR);
 pub(super) const PUZZLE: Puzzle = Puzzle::new(DATE, solve);

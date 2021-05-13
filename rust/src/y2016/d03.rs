@@ -34,7 +34,7 @@ fn solve(input: String) -> Result {
 struct Triplet(u16, u16, u16);
 
 impl Triplet {
-    fn is_valid_triangle(self) -> bool {
+    const fn is_valid_triangle(self) -> bool {
         let Triplet(a, b, c) = self;
         a + b > c && b + c > a && c + a > b
     }

@@ -81,7 +81,7 @@ impl Machine {
         Next
     }
 
-    fn get(&self, register: Register) -> u32 {
+    const fn get(&self, register: Register) -> u32 {
         match register {
             A => self.reg_a,
             B => self.reg_b,
@@ -111,7 +111,7 @@ impl Machine {
 }
 
 #[rustfmt::skip]
-#[allow(clippy::cyclomatic_complexity)]
+#[allow(clippy::cognitive_complexity)]
 fn parse_program(s: &str) -> Result<Program> {
     named!(register(Bytes<'_>) -> Register,
         alt!(value!(A, tag!("a")) | value!(B, tag!("b")))

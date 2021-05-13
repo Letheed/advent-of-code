@@ -1,7 +1,9 @@
+use std::fmt::{self, Display, Write};
+
+use fnv::FnvHashMap as HashMap;
+
 use self::Instruction::{Rect, RotCol, RotRow};
 use crate::{parse::*, Date, Day, OkOrFail, Puzzle, Result};
-use fnv::FnvHashMap as HashMap;
-use std::fmt::{self, Display, Write};
 
 const DATE: Date = Date::new(Day::D08, super::YEAR);
 pub(super) const PUZZLE: Puzzle = Puzzle::new(DATE, solve);
@@ -15,7 +17,7 @@ fn solve(input: String) -> Result {
     }
     let lit_pixels =
         screen.grid.iter().map(|row| row.iter().filter(|pix| **pix).count()).sum::<usize>();
-    let font = FONT.iter().cloned().collect::<HashMap<_, _>>();
+    let font = FONT.iter().copied().collect::<HashMap<_, _>>();
     let mut code = String::with_capacity(Screen::SEGMENTS);
     for i in 0..Screen::SEGMENTS {
         let encoding = screen.encode_segment(i).ok_or_fail("segment index out of bounds")?;

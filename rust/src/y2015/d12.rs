@@ -1,5 +1,6 @@
-use crate::{Date, Day, Puzzle, Result};
 use json::JsonValue::{self, Array, Number, Object};
+
+use crate::{Date, Day, Puzzle, Result};
 
 const DATE: Date = Date::new(Day::D12, super::YEAR);
 pub(super) const PUZZLE: Puzzle = Puzzle::new(DATE, solve);
@@ -31,9 +32,11 @@ fn sum_numbers_not_red(json: &JsonValue) -> i32 {
     let mut stack = vec![json];
     while let Some(val) = stack.pop() {
         match val {
-            Object(obj) => if !obj.iter().any(|kv| kv.1 == "red") {
-                stack.extend(obj.iter().map(|kv| kv.1))
-            },
+            Object(obj) => {
+                if !obj.iter().any(|kv| kv.1 == "red") {
+                    stack.extend(obj.iter().map(|kv| kv.1))
+                }
+            }
             Array(array) => stack.extend(array),
             Number(num) => n += i32::from(*num),
             _ => {}

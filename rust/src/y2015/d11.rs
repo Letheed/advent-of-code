@@ -1,6 +1,8 @@
-use crate::{Date, Day, Puzzle, Result};
-use failure::bail;
 use std::convert::TryFrom;
+
+use failure::bail;
+
+use crate::{Date, Day, Puzzle, Result};
 
 const DATE: Date = Date::new(Day::D11, super::YEAR);
 pub(super) const PUZZLE: Puzzle = Puzzle::new(DATE, solve);
@@ -25,7 +27,7 @@ impl TryFrom<String> for Password {
 
     fn try_from(string: String) -> Result<Self> {
         let bytes = string.into_bytes();
-        if bytes.iter().cloned().all(|b| b'a' <= b && b <= b'z') {
+        if bytes.iter().copied().all(|b| (b'a'..=b'z').contains(&b)) {
             Ok(Self { bytes })
         } else {
             bail!("password uses letters other than a..z");
@@ -58,10 +60,8 @@ impl Password {
         while let Some(pair) = pairs.next() {
             if pair[0] == pair[1] {
                 if n == 1 { return true; }
-                else {
-                    n += 1;
-                    pairs.next();
-                }
+                n += 1;
+                pairs.next();
             }
         }
         false

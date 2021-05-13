@@ -1,5 +1,6 @@
-use crate::{Date, Day, Puzzle, Result};
 use failure::bail;
+
+use crate::{Date, Day, Puzzle, Result};
 
 const DATE: Date = Date::new(Day::D07, super::YEAR);
 pub(super) const PUZZLE: Puzzle = Puzzle::new(DATE, solve);
@@ -34,12 +35,11 @@ fn solve(input: String) -> Result {
     answer!(support_tls, support_ssl);
 }
 
-fn parse_supernets_and_hypernets(
+fn parse_supernets_and_hypernets<'a>(
     mut s: &'a str,
     supernets: &mut Vec<&'a str>,
     hypernets: &mut Vec<&'a str>,
-) -> Result<()>
-{
+) -> Result<()> {
     loop {
         let mut split = s.splitn(2, '[');
         let supernet = split.next().expect("first `next()` cannot fail on `Split`");

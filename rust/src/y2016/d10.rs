@@ -1,6 +1,7 @@
-use crate::{parse::*, Date, Day, OkOrFail, Puzzle, Result};
 use failure::{bail, ResultExt};
 use fnv::FnvHashMap as HashMap;
+
+use crate::{parse::*, Date, Day, OkOrFail, Puzzle, Result};
 
 const DATE: Date = Date::new(Day::D10, super::YEAR);
 pub(super) const PUZZLE: Puzzle = Puzzle::new(DATE, solve);
@@ -30,9 +31,11 @@ fn solve(input: String) -> Result {
         macro_rules! proceed {
             ($next:expr, $value:expr) => {
                 match $next {
-                    Next::Bot(bot_id) => if bots.store(bot_id, $value)? {
-                        can_proceed.push(bot_id);
-                    },
+                    Next::Bot(bot_id) => {
+                        if bots.store(bot_id, $value)? {
+                            can_proceed.push(bot_id);
+                        }
+                    }
                     Next::Output(output_id) => {
                         if outputs.insert(output_id, $value).is_some() {
                             bail!("output {} already has a microchip", output_id);
@@ -74,7 +77,7 @@ struct Bot {
 }
 
 impl Bot {
-    fn new(config: BotConfig) -> Self {
+    const fn new(config: BotConfig) -> Self {
         Self { config, values: (None, None) }
     }
 
@@ -99,7 +102,7 @@ struct Bots(HashMap<BotId, Bot>);
 
 impl Default for Bots {
     fn default() -> Self {
-        Bots(HashMap::default())
+        Self(HashMap::default())
     }
 }
 

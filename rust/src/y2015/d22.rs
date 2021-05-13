@@ -1,9 +1,10 @@
+use std::cmp::max;
+
 use self::{
     Difficulty::{Hard, Normal},
     Spell::{Drain, Missile, Poison, Recharge, Shield},
 };
 use crate::{parse::*, Date, Day, Puzzle, Result};
-use std::cmp::max;
 
 const DATE: Date = Date::new(Day::D22, super::YEAR);
 pub(super) const PUZZLE: Puzzle = Puzzle::new(DATE, solve);
@@ -14,10 +15,8 @@ fn solve(input: String) -> Result {
     let player = Player::new();
     let mut min_mana_spent = u16::max_value();
     let mut min_mana_spent_hard = u16::max_value();
-    let mut fights = vec![
-        Fight::new(player.clone(), boss.clone(), Normal),
-        Fight::new(player.clone(), boss.clone(), Hard),
-    ];
+    let mut fights =
+        vec![Fight::new(player.clone(), boss.clone(), Normal), Fight::new(player, boss, Hard)];
     while let Some(mut fight) = fights.pop() {
         let min_mana_spent = if let Hard = fight.difficulty {
             if fight.player.hp == 1 {
@@ -97,7 +96,7 @@ struct Fight {
 }
 
 impl Fight {
-    fn new(player: Player, boss: Boss, difficulty: Difficulty) -> Self {
+    const fn new(player: Player, boss: Boss, difficulty: Difficulty) -> Self {
         Self { player, boss, mana_spent: 0, difficulty }
     }
 
@@ -205,7 +204,7 @@ enum Spell {
 }
 
 impl Spell {
-    fn mana_cost(self) -> u16 {
+    const fn mana_cost(self) -> u16 {
         MANA_COST[self as usize]
     }
 }

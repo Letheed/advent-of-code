@@ -49,5 +49,5 @@ struct Volume {
 }
 
 fn parse_jugs(s: &str) -> Result<Vec<Jug>> {
-    Ok(s.lines().map(|line| line.parse::<Jug>()).collect::<std::result::Result<_, _>>()?)
+    Ok(s.lines().map(str::parse).collect::<std::result::Result<_, _>>()?)
 }

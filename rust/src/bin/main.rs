@@ -1,15 +1,19 @@
 #![feature(drain_filter)]
 #![feature(in_band_lifetimes)]
 #![feature(stmt_expr_attributes)]
-#![feature(tool_lints)]
-#![warn(rust_2018_idioms, rust_2018_compatibility)]
-#![deny(clippy::correctness)]
+#![warn(rust_2018_idioms)]
 #![warn(clippy::pedantic)]
-#![warn(clippy::style)]
-#![warn(clippy::complexity)]
-#![warn(clippy::perf)]
+// #![warn(clippy::cargo)]
+#![warn(clippy::nursery)]
 #![allow(clippy::indexing_slicing)]
 #![allow(clippy::non_ascii_literal)]
+#![allow(clippy::similar_names)]
+#![allow(clippy::cargo_common_metadata)]
+
+use std::{
+    fmt::{self, Display},
+    time::Duration,
+};
 
 use ansi_term::{
     Color::{Green, Red},
@@ -18,12 +22,12 @@ use ansi_term::{
 use aoc::{nom, uint, Answers, Day, Puzzle, Puzzles, Year, YearPuzzles};
 use failure::{format_err, Error};
 use fnv::FnvHashMap as HashMap;
-use nom::{types::CompleteStr as Str, *};
-use num_traits::FromPrimitive;
-use std::{
-    fmt::{self, Display},
-    time::Duration,
+use nom::{
+    alt, char, digit, do_parse, expr_opt, flat_map, named, parse_to,
+    separated_nonempty_list_complete, tag, try_parse, types::CompleteStr as Str, ErrorKind,
+    IResult, InputLength,
 };
+use num_traits::FromPrimitive;
 
 macro_rules! color_test_result {
     ($res:expr, $sol:expr) => {
@@ -72,7 +76,7 @@ fn parse_date_arg(s: &str) -> Result<DateArg, Error> {
         n: uint!(u8) >> day: expr_opt!(Day::from_u8(n)) >> (day)
     ));
     fn day_arg(s: Str<'_>) -> IResult<Str<'_>, DayArg> {
-        use nom::{Context::Code, Err::Failure, ErrorKind};
+        use nom::{Context::Code, Err::Failure};
 
         if s.input_len() == 0 {
             return Ok((s, DayArg::All));
@@ -127,9 +131,9 @@ fn group_by_year(mut date_args: Vec<DateArg>) -> HashMap<Year, Vec<DayArg>> {
 
 fn not_solved(year: Year, day: Option<Day>) {
     if let Some(day) = day {
-        println!("{}-{} {} {}", year, day, RunDuration(None), "puzzle not solved");
+        println!("{}-{} {} puzzle not solved", year, day, RunDuration(None));
     } else {
-        println!("{}    {} {}", year, RunDuration(None), "puzzles not solved");
+        println!("{}    {} puzzles not solved", year, RunDuration(None));
     }
 }
 
@@ -162,8 +166,7 @@ impl<T> Present for &'a HashMap<Year, T>
 where T: AsRef<[DayArg]>
 {
     fn present(self) {
-        let mut year_map_iter =
-            self.into_iter().filter(|(_, day_args)| !day_args.as_ref().is_empty());
+        let mut year_map_iter = self.iter().filter(|(_, day_args)| !day_args.as_ref().is_empty());
         if let Some((&year, day_args)) = year_map_iter.next() {
             (year, day_args.as_ref()).present();
             for (&year, day_args) in year_map_iter {
@@ -183,11 +186,13 @@ impl Present for (Year, &'a [DayArg]) {
         let mut days = Vec::new();
         for day_arg in day_args {
             match *day_arg {
-                DayArg::All => if let Some(year_puzzles) = aoc::PUZZLES.get(year) {
-                    days.extend(year_puzzles.into_iter().map(|puzzle| puzzle.date().day()));
-                },
+                DayArg::All => {
+                    if let Some(year_puzzles) = aoc::PUZZLES.get(year) {
+                        days.extend(year_puzzles.into_iter().map(|puzzle| puzzle.date().day()));
+                    }
+                }
                 DayArg::Day(day) => days.push(day),
-                DayArg::DayList(ref day_list) => days.extend_from_slice(&day_list),
+                DayArg::DayList(ref day_list) => days.extend_from_slice(day_list),
                 DayArg::DayRange(start, end) => days.extend(
                     (start as u8..=end as u8)
                         .map(|n| Day::from_u8(n).expect("day cannot be out of range")),

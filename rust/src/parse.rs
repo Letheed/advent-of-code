@@ -1,5 +1,5 @@
-crate use failure::format_err;
-crate use nom::{
+pub use failure::format_err;
+pub use nom::{
     types::{CompleteByteSlice as Bytes, CompleteStr as Str},
     *,
 };
