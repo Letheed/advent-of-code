@@ -1,5 +1,7 @@
 use std::collections::BTreeMap;
 
+use md5::{Digest, Md5};
+
 use crate::{Date, Day, Puzzle, Result};
 
 const DATE: Date = Date::new(Day::D05, super::YEAR);
@@ -12,10 +14,10 @@ fn solve(input: String) -> Result {
     let mut buffer = input.into_bytes();
     let start = buffer.len();
     buffer.push(b'0');
+    let mut hasher = Md5::new();
     while password2.len() < 8 {
-        let mut hasher = md5::Md5::default();
-        hasher.consume(&buffer);
-        let digest = hasher.hash();
+        hasher.update(&buffer);
+        let digest = hasher.finalize_reset();
         if digest[..2] == [0, 0] && digest[2] < 0x10 {
             if password1.len() < 8 {
                 let c = hex_digit(digest[2]);

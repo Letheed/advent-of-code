@@ -2,6 +2,8 @@
 name = "aoc"
 version = "0.1.0"
 authors = ["letheed <letheed@outlook.com>"]
+description = "Advent of Code in Rust"
+repository = "https://github.com/letheed/aoc/tree/master/rust"
 edition = "2018"
 
 [dependencies]
@@ -11,9 +13,9 @@ derive_more = "0.99"
 divrem = "1"
 failure = "0.1"
 fnv = "1.0"
-json = "0.11"
+json = "0.12"
 lazy_static = "1.1.0"
-md-5 = "0.7"
+md-5 = "0.9"
 mod_exp = "1.0"
 nom = "4.0"
 num-traits = "0.2"

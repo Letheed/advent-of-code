@@ -1,4 +1,3 @@
-#![allow(clippy::use_self)]
 use std::result::Result as StdResult;
 
 use lazy_static::lazy_static;
@@ -37,6 +36,9 @@ pub enum Answers {
 }
 
 mod day {
+    // Silence clippy linting on `FromPrimitive` macro code.
+    // See issue rust-lang#84122.
+    #![allow(clippy::use_self)]
     use std::fmt::{self, Display};
 
     use num_derive::FromPrimitive;
@@ -79,6 +81,9 @@ mod day {
 }
 
 mod year {
+    // Silence clippy linting on `FromPrimitive` macro code.
+    // See issue rust-lang#84122.
+    #![allow(clippy::use_self)]
     use std::fmt::{self, Display};
 
     use num_derive::FromPrimitive;
@@ -109,7 +114,7 @@ mod year {
         #[inline]
         #[must_use]
         pub const fn as_index(self) -> usize {
-            self as usize - Year::Y2015 as usize
+            self as usize - Self::Y2015 as usize
         }
     }
 }

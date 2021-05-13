@@ -13,22 +13,22 @@ fn solve(input: String) -> Result {
     answer!(n1, n2);
 }
 
-fn sum_numbers(json: &JsonValue) -> i32 {
-    let mut n = 0;
+fn sum_numbers(json: &JsonValue) -> f64 {
+    let mut n = 0.0;
     let mut stack = vec![json];
     while let Some(val) = stack.pop() {
         match val {
             Object(obj) => stack.extend(obj.iter().map(|kv| kv.1)),
             Array(array) => stack.extend(array),
-            Number(num) => n += i32::from(*num),
+            Number(num) => n += f64::from(*num),
             _ => {}
         }
     }
     n
 }
 
-fn sum_numbers_not_red(json: &JsonValue) -> i32 {
-    let mut n = 0;
+fn sum_numbers_not_red(json: &JsonValue) -> f64 {
+    let mut n = 0.0;
     let mut stack = vec![json];
     while let Some(val) = stack.pop() {
         match val {
@@ -38,7 +38,7 @@ fn sum_numbers_not_red(json: &JsonValue) -> i32 {
                 }
             }
             Array(array) => stack.extend(array),
-            Number(num) => n += i32::from(*num),
+            Number(num) => n += f64::from(*num),
             _ => {}
         }
     }
