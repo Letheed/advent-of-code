@@ -93,7 +93,6 @@ mod alternative {
         answer!(decompressed_len_v1, decompressed_len_v2);
     }
 
-    #[derive(Debug)]
     enum StubV1<'a> {
         Once(&'a str),
         Repeat(&'a str, usize),
@@ -108,7 +107,6 @@ mod alternative {
         }
     }
 
-    #[derive(Debug)]
     enum StubV2<'a> {
         Once(&'a str),
         Repeat(Vec<StubV2<'a>>, usize),

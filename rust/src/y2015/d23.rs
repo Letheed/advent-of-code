@@ -23,7 +23,7 @@ fn solve(input: String) -> Result {
 
 type Program = Vec<Instruction>;
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone)]
 enum Register {
     A,
     B,
@@ -34,7 +34,7 @@ enum Flow {
     Jump(isize),
 }
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone)]
 enum Instruction {
     Hlf(Register),
     Tpl(Register),
@@ -57,9 +57,11 @@ impl Machine {
         self.ptr = 0;
         while let Some(&instruction) = program.get(self.ptr) {
             match self.execute(instruction) {
-                Jump(offset) => if self.jump(offset) {
-                    return;
-                },
+                Jump(offset) => {
+                    if self.jump(offset) {
+                        return;
+                    }
+                }
                 Next => self.ptr += 1,
             }
         }
@@ -71,12 +73,16 @@ impl Machine {
             Tpl(reg) => *self.get_mut(reg) *= 3,
             Inc(reg) => *self.get_mut(reg) += 1,
             Jmp(offset) => return Jump(offset),
-            Jie(reg, offset) => if self.get(reg) % 2 == 0 {
-                return Jump(offset);
-            },
-            Jio(reg, offset) => if self.get(reg) == 1 {
-                return Jump(offset);
-            },
+            Jie(reg, offset) => {
+                if self.get(reg) % 2 == 0 {
+                    return Jump(offset);
+                }
+            }
+            Jio(reg, offset) => {
+                if self.get(reg) == 1 {
+                    return Jump(offset);
+                }
+            }
         }
         Next
     }

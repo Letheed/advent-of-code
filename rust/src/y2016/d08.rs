@@ -27,7 +27,7 @@ fn solve(input: String) -> Result {
     answer!(lit_pixels, code);
 }
 
-#[derive(Copy, Clone, Eq, PartialEq, Debug)]
+#[derive(Copy, Clone, Eq, PartialEq)]
 enum Instruction {
     Rect(usize, usize),
     RotRow(usize, usize),
