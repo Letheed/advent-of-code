@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 use crate::{Date, Day, Puzzle, Result};
 
 const DATE: Date = Date::new(Day::D17, super::YEAR);
@@ -16,22 +18,28 @@ fn solve(input: String) -> Result {
     for jug in jugs {
         for &volume in &volumes {
             let new_total = volume.total + jug;
-            if new_total == wanted_volume {
-                combinations += 1;
-                let jugs = volume.jugs + 1;
-                if jugs == fewest_jugs {
-                    combinations_of_fewest_jugs += 1;
-                } else if jugs < fewest_jugs {
-                    fewest_jugs = jugs;
-                    combinations_of_fewest_jugs = 1;
+            match new_total.cmp(&wanted_volume) {
+                Ordering::Equal => {
+                    combinations += 1;
+                    let jugs = volume.jugs + 1;
+                    match jugs.cmp(&fewest_jugs) {
+                        Ordering::Equal => combinations_of_fewest_jugs += 1,
+                        Ordering::Less => {
+                            fewest_jugs = jugs;
+                            combinations_of_fewest_jugs = 1;
+                        }
+                        Ordering::Greater => {}
+                    }
+                    new_volumes.push(volume);
                 }
-                new_volumes.push(volume);
-            } else if new_total < wanted_volume {
-                let mut new_volume = volume;
-                new_volume.jugs += 1;
-                new_volume.total = new_total;
-                new_volumes.push(volume);
-                new_volumes.push(new_volume);
+                Ordering::Less => {
+                    let mut new_volume = volume;
+                    new_volume.jugs += 1;
+                    new_volume.total = new_total;
+                    new_volumes.push(volume);
+                    new_volumes.push(new_volume);
+                }
+                Ordering::Greater => {}
             }
         }
         std::mem::swap(&mut volumes, &mut new_volumes);

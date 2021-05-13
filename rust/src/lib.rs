@@ -1,20 +1,13 @@
+#![feature(stmt_expr_attributes)]
 #![feature(const_fn_fn_ptr_basics)]
 #![feature(generators, generator_trait)]
-// #![feature(in_band_lifetimes)]
-// #![feature(nll)]
-#![feature(stmt_expr_attributes)]
-// #![feature(tool_lints)]
-// #![feature(try_from)]
 #![warn(rust_2018_idioms)]
 #![warn(clippy::pedantic)]
 #![warn(clippy::cargo)]
 #![warn(clippy::nursery)]
-#![allow(clippy::indexing_slicing)]
 #![allow(clippy::similar_names)]
-#![allow(clippy::double_parens)]
 #![allow(clippy::cargo_common_metadata)]
 #![allow(clippy::wildcard_imports)]
-#![allow(clippy::comparison_chain)]
 
 pub use failure::Error;
 

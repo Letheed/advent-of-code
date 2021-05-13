@@ -1,4 +1,4 @@
-use std::{collections::BTreeMap, str};
+use std::{cmp::Ordering, collections::BTreeMap, str};
 
 use failure::bail;
 
@@ -56,17 +56,19 @@ fn decompressed_lengths(s: &str) -> Result<(usize, usize)> {
             }
             Some(_) => {
                 decompressed_length_v2 += weight;
-                if i == next_span_end {
-                    match weights.remove(&i) {
-                        Some(w) => weight /= w,
-                        None => bail!("span end not in weights"),
+                match i.cmp(&next_span_end) {
+                    Ordering::Equal => {
+                        match weights.remove(&i) {
+                            Some(w) => weight /= w,
+                            None => bail!("span end not in weights"),
+                        }
+                        next_span_end = match weights.keys().next() {
+                            Some(&j) => j,
+                            None => usize::max_value(),
+                        };
                     }
-                    next_span_end = match weights.keys().next() {
-                        Some(&j) => j,
-                        None => usize::max_value(),
-                    };
-                } else if i > next_span_end {
-                    bail!("missed a span end");
+                    Ordering::Greater => bail!("missed a span end"),
+                    Ordering::Less => {}
                 }
             }
             None => break,

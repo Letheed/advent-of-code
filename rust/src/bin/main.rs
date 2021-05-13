@@ -1,13 +1,11 @@
-#![feature(drain_filter)]
-#![feature(in_band_lifetimes)]
 #![feature(stmt_expr_attributes)]
+#![feature(drain_filter)]
 #![warn(rust_2018_idioms)]
 #![warn(clippy::pedantic)]
-// #![warn(clippy::cargo)]
+#![warn(clippy::cargo)]
 #![warn(clippy::nursery)]
-#![allow(clippy::indexing_slicing)]
-#![allow(clippy::non_ascii_literal)]
 #![allow(clippy::similar_names)]
+#![allow(clippy::non_ascii_literal)]
 #![allow(clippy::cargo_common_metadata)]
 
 use std::{
@@ -141,7 +139,7 @@ trait Present {
     fn present(self);
 }
 
-impl Present for &'a Puzzles {
+impl<'a> Present for &'a Puzzles {
     fn present(self) {
         let mut year_puzzles_iter = self.into_iter();
         if let Some(year_puzzles) = year_puzzles_iter.next() {
@@ -154,7 +152,7 @@ impl Present for &'a Puzzles {
     }
 }
 
-impl Present for &'a YearPuzzles {
+impl<'a> Present for &'a YearPuzzles {
     fn present(self) {
         for puzzle in self {
             puzzle.present();
@@ -162,7 +160,7 @@ impl Present for &'a YearPuzzles {
     }
 }
 
-impl<T> Present for &'a HashMap<Year, T>
+impl<'a, T> Present for &'a HashMap<Year, T>
 where T: AsRef<[DayArg]>
 {
     fn present(self) {
@@ -177,7 +175,7 @@ where T: AsRef<[DayArg]>
     }
 }
 
-impl Present for (Year, &'a [DayArg]) {
+impl<'a> Present for (Year, &'a [DayArg]) {
     fn present(self) {
         let (year, day_args) = self;
         if day_args.is_empty() {
@@ -219,7 +217,7 @@ impl Present for (Year, &'a [DayArg]) {
 //     }
 // }
 
-impl Present for (Year, &'a [Day]) {
+impl<'a> Present for (Year, &'a [Day]) {
     fn present(self) {
         let (year, days) = self;
         if days.is_empty() {
@@ -239,7 +237,7 @@ impl Present for (Year, &'a [Day]) {
     }
 }
 
-impl Present for &'a Puzzle {
+impl<'a> Present for &'a Puzzle {
     fn present(self) {
         let (dur, res, sol) = match self.solve() {
             Ok((Answers::None, _)) => (None, Ok(Answers::None), Ok(Answers::None)),
